@@ -1,1 +1,1 @@
-# app-labs
+# Arhitecturi și Prelucrări Paralele - laboratoare
