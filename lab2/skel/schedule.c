@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define CHUNKSIZE 10
+#define CHUNKSIZE 8
 #define N 100000
 
 int main(int argc, char *argv[]) 
@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
             printf("Number of threads = %d\n", nthreads);
         }
 
-        #pragma omp for schedule(dynamic,chunk)
+        #pragma omp for schedule(auto)
         for (i = 0; i < N; i++) {
             c[i] = a[i] + b[i];
         }
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     }
     t2 = omp_get_wtime();
     
-    printf("Execution time %g",t2-t1);
+    printf("Execution time %g\n",t2-t1);
     
     return 0;
 }

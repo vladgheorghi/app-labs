@@ -29,7 +29,9 @@ int main() {
         fclose(file);
     }
 
+    # pragma omp parallel for shared(letters, words) schedule(static, 1)
     for (int i = 0; i < words.size(); i++) {
+        # pragma omp parallel for shared(letters, words) schedule(static, 1)
         for (int j = 0; j < words[i].size(); j++) {
             letters[words[i][j]]++;
         }

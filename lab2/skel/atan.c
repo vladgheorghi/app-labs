@@ -23,6 +23,7 @@ int main () {
 	*/
 	double t1, t2;
 	t1 = omp_get_wtime();
+	#pragma omp parallel for private(x) reduction(+:sum)
 	for (i = 1; i <= num_steps; i++){
 		x = (i - 0.5) * step;
 		sum = sum + 4.0 / (1.0 + x * x);
