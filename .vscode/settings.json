@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "*.ejs": "html",
-        "random": "c",
-        "queue": "c",
-        "stdlib.h": "c"
-    }
-}
