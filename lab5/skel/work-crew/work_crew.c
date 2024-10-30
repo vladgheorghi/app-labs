@@ -38,7 +38,7 @@ int main(int argc, char const *argv[]) {
         A[i] = calloc(size, sizeof(int));
     }
     results = calloc(size, sizeof(int));
-    
+
     if (A == NULL) {
         perror("calloc failed");
         exit(EXIT_FAILURE);
@@ -55,12 +55,28 @@ int main(int argc, char const *argv[]) {
         }
     }
     
-    // worker threads
+    // Worker threads
     pthread_t threads[no_threads];
     int tids[no_threads];
     
-    // TODO
+    // Create threads
+    for (int i = 0; i < no_threads; i++) {
+        tids[i] = i;
+        if (pthread_create(&threads[i], NULL, do_sum, &tids[i]) != 0) {
+            perror("pthread_create failed");
+            exit(EXIT_FAILURE);
+        }
+    }
+    
+    // Join threads
+    for (int i = 0; i < no_threads; i++) {
+        if (pthread_join(threads[i], NULL) != 0) {
+            perror("pthread_join failed");
+            exit(EXIT_FAILURE);
+        }
+    }
 
+    // Summing up the results from each row
     for (int i = 0; i < size; i++) {
         total_sum += results[i];
     }

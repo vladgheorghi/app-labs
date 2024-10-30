@@ -48,7 +48,7 @@ void service_client() {
 
 void *barber_function(void *idp) {    
     int counter = 0;
-    
+
     for(;;) {
         // TODO
 
@@ -65,7 +65,7 @@ void *barber_function(void *idp) {
 
         // Unlock mutex "served_client_mutex - finished service
         pthread_mutex_unlock(&served_client_mutex);
-        
+
         printf("Client %d was served.\n", counter);
         counter++; 
 

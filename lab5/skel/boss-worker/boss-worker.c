@@ -15,7 +15,7 @@ int a[SIZE], b[SIZE], c[SIZE];
 int queue_terminate_workers(struct queue_struct *queue) {
     if ((queue == NULL) || (queue->valid != QUEUE_VALID))
         return EINVAL;
-  
+
     pthread_mutex_lock(&queue->qlock);
     queue->qexit = 1;
 
@@ -30,9 +30,9 @@ void queue_wait_workers(struct queue_struct *queue, int nthreads)
 {
     if ((queue == NULL) || (queue->valid != QUEUE_VALID))
         return;
-  
+
     pthread_mutex_lock(&queue->qlock);
-    
+
     while (queue->worker_waiting != nthreads) {
         queue->boss_waiting++;
         pthread_cond_wait(&queue->boss_cv, &queue->qlock);
@@ -43,12 +43,11 @@ void queue_wait_workers(struct queue_struct *queue, int nthreads)
 }
 
 int optimal_number_of_threads() {
-    // TODO - puneti numarul de threads
-    return 0;
+    return 16;
 }
+
 int optimal_queue_length() {
-    // TODO - lungimea cozii
-    return 0;
+    return 20;
 }
 
 void process_tasks() {
@@ -99,9 +98,16 @@ void process_tasks() {
 }
 
 int get_work(struct q_work_struct* w, int pos) {
-    // TODO - atribuiti pozitia, a[poz] si b[poz] la structura - vedeti in queue.h
+    if (pos >= SIZE) {
+        return 0; // No more work if pos exceeds SIZE
+    }
+
+    // Initialize the work structure based on queue.h definitions
+    w->pos = pos;
+    w->element_a = a[pos];
+    w->element_b = b[pos];
     
-    return pos < SIZE ? 1 : 0;
+    return 1; // Indicate work was successfully assigned
 }
 
 void boss() {
@@ -134,26 +140,20 @@ void boss() {
 
 void worker() {
     struct q_work_struct *ptr;
-  
-    /* go into an infinite loop processing work received from
-    * the work queue. If we are supposed to terminate, we
-    * will never return from one of the calls to dequeue();
-    */
+
     for (;;) {
-        /* obtain the next work request */
+        // Get the next work request from the queue
         ptr = dequeue(&thr_queue);
         if (ptr == NULL) {
             fprintf(stderr, "dequeue() error\n");
             exit(-1);
         }
-    
-        /* process the work request */
-        /* ... */
 
-        // TODO - aici se va face adunarea dintre a[poz] si b[poz] (c[poz] = a[poz] + b[poz])
+        // Perform addition of a[pos] and b[pos]
+        c[ptr->pos] = ptr->element_a + ptr->element_b;
 
-        /* release memory for work request */
-        free((void *)ptr);
+        // Free the memory allocated for this work request
+        free(ptr);
     }
 }
 
